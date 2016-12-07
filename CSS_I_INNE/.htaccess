@@ -1,0 +1,4 @@
+  AuthType Basic
+  AuthName "Aby obejrzec moje CV podaj login i haslo!"
+  AuthUserFile /home/stud/banase/WWW/CV/.htpasswd
+  require valid-user
