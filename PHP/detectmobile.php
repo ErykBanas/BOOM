@@ -10,7 +10,6 @@ if(empty($_SESSION['logged_in'])){
         <META NAME="Author" CONTENT="Eryk Banaś">
         <meta name="description" content="" />
         <meta name="keywords" content="" />
-        <link rel="shortcut icon" href="AB.ico" type="image/x-icon" />
 		<link type="text/css" rel="stylesheet" href="stylesheet.css"/>
 		<title>Banaś Eryk</title>
 	</head>
@@ -28,7 +27,7 @@ header("Location: http://volt.iem.pw.edu.pl/~banase/mobile.html");
         This will be desktop site
         </p>
        <p> 
-    <a href="http://validator.w3.org/check?uri=http%3A%2F%2Fvolt.iem.pw.edu.pl%2F~breskaa%2Fdetectmobile.php"><img
+    <a href="http://validator.w3.org/check?uri=http%3A%2F%2Fvolt.iem.pw.edu.pl%2F~banase%2Fdetectmobile.php"><img
       src="http://www.w3.org/Icons/valid-xhtml11" alt="Valid XHTML 1.1" height="31" width="88"></a>
   </p> 
   </body>
