@@ -1,0 +1,163 @@
+\documentclass[11pt,a4paper]{article}
+\addtolength{\hoffset}{-2cm}
+\addtolength{\textheight}{4cm}
+\addtolength{\textwidth}{4cm}
+\addtolength{\voffset}{-2cm}
+\usepackage{polski}
+\usepackage[utf8]{inputenc}
+\usepackage{graphicx}
+\graphicspath{ {images/} }
+\title{Jêzyki i metody programowania 2\\ Sprawozdanie z projektu nr 2}
+\author{Mateusz Bocheñski\\ Eryk Banaœ}
+\date{07.06.2017}
+ 
+\begin{document}
+\maketitle
+\section{Opis ogólny}
+\subsection{Nazwa programu}
+WireWorld 
+\subsection{Poruszany problem}
+Celem projektu jest stworzenie aplikacji w jêzyku Java implementuj¹cej automat komórkowy WireWorld Briana Silvermana.
+Komórka mo¿e znajdowaæ siê w jednym z czterech stanów:
+\begin{enumerate}
+\item Pusta (kolor bia³y)
+\item G³owa elektronu (kolor czerwony)
+\item Ogon elektrony (kolor ¿ó³ty)
+\item Przewodnik (kolor czarny)
+\end{enumerate}
+Kolejne generacje budowane s¹ z wykorzystaniem zestawu piêciu zasad:
+\begin{itemize}	
+\item Komórka pozostaje Pusta, jeœli by³a Pusta.
+\item Komórka staje siê Ogonem elektronu, jeœli by³a G³ow¹ elektronu.
+\item Komórka staje siê G³ow¹ elektronu tylko wtedy, gdy dok³adnie 1 lub 2 s¹siaduj¹ce komórki s¹ G³owami Elektronu, by³a Przewodnikiem i nie by³a Ogonem.
+\item Komórka staje siê Przewodnikiem jeœli by³a Ogonem elektronu oraz w ka¿dym innym wypadku.
+\end{itemize}
+Do sprawdzenia stanu komórek w danej iteracji stosowane jest s¹siedztwo Moore’a.
+
+\section{Opis funkcjonalnoœci}
+\subsection{Jak korzystaæ z programu}
+Obs³uga programu odbywa siê g³ównie za pomoc¹ interfejsu graficznego. Menu zosta³o opracowane intuicyjnie, w razie w¹tpliwoœci polecamy przeczytanie instrukcji znajduj¹cej siê pod pozycj¹ menu “Pomoc”, a nastêpnie ponownie “Pomoc”.
+
+Uwaga: projekt nale¿y zaimportowaæ jako projekt Maven, ¿eby mo¿na by³o korzystaæ z bibliotek.
+
+\subsection{Uruchomienie programu}
+W celu skorzystania z programu nale¿y uruchomiæ klasê App.java znajduj¹c¹ siê w folderze aplikacji w œcie¿ce: src/main/java/.
+
+
+\section{Format danych i struktura plików}
+
+\subsection{Struktura}
+
+Szablon struktury katalogowej zgodnej z Mavenem:
+\newline \break
+\includegraphics[scale=0.8]{WireWorld_folder_tree.png}
+
+Aplikacja jest podzielona nastêpuj¹co:
+\begin{itemize}	
+\item input - folder zawieraj¹cy przyk³adowe dane generacji wczytywane do aplikacji. U¿ytkownik ma mo¿liwoœæ wczytania do programu innych danych pocz¹tkowych (z innym umiejscowieniem komórek na planszy), musi tylko przestrzegaæ formatu danych zgodnego z plikiem przyk³adowym: 
+    \begin{itemize}	
+    \item exampleInputData.json
+        \begin{itemize}
+        \item WireCell - lista wspó³rzêdnych x, y pojedynczych komórek, które bêd¹ umieszczone na planszy (w gridzie)
+        \item WireLine - definicja struktury (obiektu) sk³adaj¹cej siê z kilku komórek po³o¿onych pionowo lub poziomo (w kszta³cie linii), zawiera wspó³rzêdne komórki pocz¹tkowej oraz komórki koñcowej
+        \item OrGate - definicja struktury (obiektu) sk³adaj¹cej siê z kilku komórek i tworz¹cych obramkê typu OR, zawiera wspó³rzêdne pocz¹tkowe bramki
+        \item XorGate - definicja struktury (obiektu) sk³adaj¹cej siê z kilku komórek i tworz¹cych obramkê typu XOR, zawiera wspó³rzêdne pocz¹tkowe bramki
+        \item ElectronHead - lista wspó³rzêdnych komórek, które reprezentuj¹ g³owê elektronu
+        \item ElectronTail - lista wspó³rzêdnych komórek, które reprezentuj¹ ogon elektronu 
+        \end{itemize}
+    \end{itemize}
+\item core - folder zawiera podstawowe klasy jak np. Cell, Grid, Coordinate
+    \begin{itemize}	
+    \item Grid - klasa przechowuj¹ca hashMapê z komórkami (mapowania wspó³rzêdnych x, y ze stanami komórek i liczb¹ s¹siadów). 
+    Zawiera metody pozwalaj¹ce wstawiaæ do gridu (hashMapy) pojedyncze komórki - insertNewCell(int x, int y, State state) oraz ca³e obiekty sk³adaj¹ce siê z kilku komórek -  insertNewObject(WorldObject worldObject).
+    \item WorldObject - klasa abstrakcyjna dla obiektów sk³adaj¹cych siê z wiêcej ni¿ jednej komórki
+    \item OrGate - klasa reprezentuj¹ca bramkê typu OR. Dziedziczy po klasie abstrakcyjnej WorldObject. Zwraca listê komórek nale¿¹cych do bramki.
+    \item XorGate - klasa reprezentuj¹ca bramkê typu XOR. Dziedziczy po klasie abstrakcyjnej WorldObject. Zwraca listê komórek nale¿¹cych do bramki.
+    \end{itemize}
+\item utils - zawiera klasy odpowiedzialne za wczytywanie i zapisywanie plików z generacjami oraz wczytywanie konfiguracji z config.json
+model - klasy reprezentuj¹ce model
+    \begin{itemize}
+    \item World - klasa przechowuje obiekt bazowy Grid reprezentuj¹cy planszê z komórkami. Klasa World dodatkowo posiada logikê do wyliczania kolejnych stanów generacji (komórek na planszy).  
+    \end{itemize}
+\item presenter - klasy reprezentuj¹ce prezentera (poœrednicz¹ miêdzy modelem a widokiem). Ich zadaniem jest zarz¹dzanie informacjami pochodz¹cymi od widoku lub modelu/logiki biznesowej.
+\item view - klasy reprezentuj¹ce widok (interfejs graficzny aplikacji). Klasy widoku definiuj¹ wygl¹d okienek. Dodatkowo przechwytuj¹ zdarzenia, które s¹ w nich wykonywane i przekazuj¹ sterowanie do klas prezentera. 
+\item pom.xml - plik zawiera dane konfiguracyjne Maven
+\item config.json (zawiera dane konfiguracyjne aplikacji)
+    \begin{itemize}	
+    \item rozmiary planszy poziomy i pionowy
+    \item prêdkoœæ animacji (w milisekundach)
+    \item Liczba generacji do stworzenia po uruchomieniu animacji
+\end{itemize} 
+
+\end{itemize}
+
+\clearpage
+Aplikacja zosta³a stworzona wg modelu MVP (z MVP wynika model, presenter, view).
+\newline \newline \break
+\includegraphics[scale=0.8]{WireWorld_layers.png}
+\clearpage
+Uproszczony schemat aplikacji:
+\newline \newline \break
+\includegraphics[scale=0.6]{WireWorld_basicDiagram.png}
+
+\subsection{Przechowywanie danych w programie}
+Dane generacji s¹ pobierane z pliku JSON, gdzie:
+\begin{itemize}
+\item WireCell - wspó³rzêdne x, y pojedynczych komórek reprezentuj¹cych przewodnik
+\item WireLine - wspó³rzêdne pocz¹tkowe i koñcowe struktury reprezentuj¹cej prosty, d³u¿szy fragment przewodnika (odcinek)
+\item ElectronHead - wspó³rzêdne x, y g³ów elektronów
+\item ElectronTail - wspó³rzêdne x, y ogonów elektronów
+\item … - wspó³rzêdne pocz¹tkowe x, y innych dodatkowych struktur (np. bramek - AndGate)
+\end{itemize}
+ 
+W momencie klikniêcia “Otwórz generacjê” i wybraniu poprawnego pliku, dane generacji s¹ wczytywane do aplikacji z pliku config.json, konwertowane i przechowywane w klasie Configuration.java w strukturze HashMap<Coordinate, Cell>. Dziêki temu czas dostêpu do komórek o zadanych wspó³rzêdnych ma œredni¹ z³o¿onoœæ czasow¹ O(1). 
+
+\subsection{Dane wejœciowe}
+\begin{itemize}	
+\item Liczba P generacji do stworzenia
+\item Prêdkoœæ tworzenia generacji w wizualizacji
+\item Plik z konfiguracj¹ pocz¹tkow¹ - config.json 
+\end{itemize}
+\subsection{Dane wyjœciowe}
+\begin{itemize}	
+\item Wizualizacja “na ¿ywo” aktualnego stanu planszy
+\item Plik z opisem generacji wyjœciowej
+\end{itemize}
+\clearpage
+\subsection{Diagramy klas}
+Pakiet core:
+\newline \newline \break
+\includegraphics[scale=0.5]{core.png}
+\clearpage
+
+Pakiet model:
+\newline \newline \break
+\includegraphics[scale=0.8]{model.png}
+\clearpage
+
+Pakiet presenter:
+\newline \newline \break
+\includegraphics[scale=0.8]{presenter.png}
+\clearpage
+
+Pakiet view:
+\newline \newline \break
+\includegraphics[scale=0.8]{view.png}
+\clearpage
+
+
+Pakiet utils:
+\newline \newline \break
+\includegraphics[scale=0.8]{utils.png}
+\newline \newline \break
+G³ówna klasa aplikacji:
+\newline \newline \break
+\includegraphics[scale=0.8]{app.png}
+
+
+\section{Testowanie}
+
+Program zosta³ przetestowany poprzez wprowadzanie zmian w plikach z danymi oraz wybieranie wszystkich dostêpnych opcji w GUI.
+Powsta³y trzy klasy testowe wykorzystuj¹ce Junit do testów jednostkowych.
+
+\end{document}
